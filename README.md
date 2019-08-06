@@ -18,11 +18,11 @@ Angle brackets and its content are placeholders.
 
 ### Preprocessing the Images
 
-Reduce the input images' color to a limited set first. To make this step easier, you can download the needed Adobe Photoshop color table in the `extra/` directory. Press Ctrl+Alt+Shift+S, select PNG-8 as the format, select "Load color table¡­" from the drop-down menu of the section "Color Table", then open that color table you just downloaded. (Excuse for the inaccurate of menu literals if there is any, I'm not using the English version Photoshop.)
+Reduce the input images' color to a limited set first. To make this step easier, you can download the needed Adobe Photoshop color table in the `extra/` directory. Press Ctrl+Alt+Shift+S, select PNG-8 as the format, select "Load color tableâ€¦" from the drop-down menu of the section "Color Table", then open that color table you just downloaded. (Excuse for the inaccurate of menu literals if there is any, I'm not using the English version Photoshop.)
 
 And don't forget to crop the image to 128 x 128.
 
-> If you aren't a Photoshop user¡­  
+> If you aren't a Photoshop userâ€¦  
 > Read the link above to make a color table for your favorite image processing software. Feel free to contribute if you made one!
 
 > The reason I've decided to not bundle these steps in the program? Because professional software generally has better algorithms (especially dithering algorithms) than many image processing libraries and my shitty code, and you can even fine-tune the parameters to find out the best setting for a specific image. (Some algorithms just performs worse with certain images.)
