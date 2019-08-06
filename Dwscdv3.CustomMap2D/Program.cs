@@ -9,7 +9,6 @@ using McMaster.Extensions.CommandLineUtils;
 namespace Dwscdv3.CustomMap2D
 {
     [Command(AllowArgumentSeparator = true, ThrowOnUnexpectedArgument = false)]
-    [HelpOption]
     internal class Program
     {
         private const int SideLength = 128;
@@ -142,7 +141,7 @@ namespace Dwscdv3.CustomMap2D
             { Color.FromArgb(0x4F, 0xBC, 0xB7), 125 },
             { Color.FromArgb(0x5C, 0xDB, 0xD5), 126 },
             { Color.FromArgb(0x30, 0x73, 0x70), 127 },
-            { Color.FromArgb(0x34, 0x5A, 0xB4), SideLength },
+            { Color.FromArgb(0x34, 0x5A, 0xB4), 128 },
             { Color.FromArgb(0x3F, 0x6E, 0xDC), 129 },
             { Color.FromArgb(0x4A, 0x80, 0xFF), 130 },
             { Color.FromArgb(0x27, 0x43, 0x87), 131 },
