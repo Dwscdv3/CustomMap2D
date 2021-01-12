@@ -12,7 +12,7 @@ namespace Dwscdv3.CustomMap2D
     internal class Program
     {
         private const int SideLength = 128;
-        
+
         public Bitmap Bitmap { get; private set; }
 
         public Dictionary<Color, byte> ColorTable = new Dictionary<Color, byte>
@@ -233,43 +233,55 @@ namespace Dwscdv3.CustomMap2D
                   .Concat(Directory.EnumerateFiles(".", "*.bmp"))
                   .Concat(Directory.EnumerateFiles(".", "*.gif"))
                   .Concat(Directory.EnumerateFiles(".", "*.png"));
-            
+
             foreach (var imagePath in imagePaths)
             {
-                Bitmap = new Bitmap(imagePath);
-                if (Bitmap.Width != SideLength || Bitmap.Height != SideLength)
+                if (!int.TryParse(Path.GetFileNameWithoutExtension(imagePath), out var id) || id >= 0)
                 {
-                    Console.WriteLine("Width and height should be 128 pixels long.");
+                    Console.WriteLine($"{imagePath}: File name must be a negative integer.");
                     return;
                 }
 
-                var colors = new byte[SideLength * SideLength];
-
-                for (var i = 0; i < SideLength * SideLength; i += 1)
+                Bitmap = new Bitmap(imagePath);
+                if (Bitmap.Width % SideLength > 0 || Bitmap.Height % SideLength > 0)
                 {
-                    colors[i] = ColorTable[Bitmap.GetPixel(i % SideLength, i / SideLength)];
+                    Console.WriteLine($"{imagePath}: Image width and height must be a multiple of 128.");
+                    return;
                 }
 
-                var nbtPath = $"map_{Path.GetFileNameWithoutExtension(imagePath)}.dat";
-                new NbtFile(new NbtCompound("root")
+                for (var y = 0; y < Bitmap.Height; y += SideLength)
                 {
-                    new NbtCompound("data")
+                    for (var x = 0; x < Bitmap.Width; x += SideLength)
                     {
-                        new NbtByte("scale", 0),
-                        new NbtByte("dimemsion", 0),
-                        new NbtByte("trackingPosition", 0),
-                        new NbtByte("unlimitedTracking", 0),
-                        new NbtByte("locked", 1),
-                        new NbtInt("xCenter", 0),
-                        new NbtInt("zCenter", 0),
-                        new NbtList("banners", NbtTagType.Compound),
-                        new NbtList("frames", NbtTagType.Compound),
-                        new NbtByteArray("colors", colors),
-                    },
-                    new NbtInt("DataVersion", 1343),
-                }).SaveToFile(nbtPath, NbtCompression.GZip);
+                        var colors = new byte[SideLength * SideLength];
 
-                Console.WriteLine(Path.GetFullPath(nbtPath));
+                        for (var i = 0; i < SideLength * SideLength; i += 1)
+                        {
+                            colors[i] = ColorTable[Bitmap.GetPixel(x + i % SideLength, y + i / SideLength)];
+                        }
+
+                        var nbtPath = $"map_{id--}.dat";
+                        new NbtFile(new NbtCompound("root")
+                        {
+                            new NbtCompound("data")
+                            {
+                                new NbtByte("scale", 0),
+                                new NbtString("dimension", "minecraft:overworld"),
+                                new NbtByte("trackingPosition", 0),
+                                new NbtByte("unlimitedTracking", 0),
+                                new NbtByte("locked", 1),
+                                new NbtInt("xCenter", 0),
+                                new NbtInt("zCenter", 0),
+                                new NbtList("banners", NbtTagType.Compound),
+                                new NbtList("frames", NbtTagType.Compound),
+                                new NbtByteArray("colors", colors),
+                            },
+                            new NbtInt("DataVersion", 2584),
+                        }).SaveToFile(nbtPath, NbtCompression.GZip);
+
+                        Console.WriteLine(Path.GetFullPath(nbtPath));
+                    }
+                }
             }
         }
     }
