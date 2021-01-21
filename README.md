@@ -4,28 +4,29 @@
 
 CustomMap2D is an improvised ill-designed project used to generate Minecraft map art as their final `.dat` NBT files.
 
-Currently, only properly converted or created images are supported. That is, images with exactly 128 x 128 size, and only contain version 1.12 colors mentioned on [this page](https://minecraft.gamepedia.com/Map_item_format).
+The current version is designed for 1.16. For 1.12+ compatibility, check the v1.0 release.
 
 ## How to Use
 
-<small>(Assuming you have intermediate level command-line knowledge since here is GitHub.)</small>
+Note:
 
-Warning: This method requires direct modifying of world directory. Your save will be generally safe, however, back-up your save first if you can't figure out what you are doing!
-
-And because of that, you can't use this method on servers you don't own, obviously.
-
-Angle brackets and its content are placeholders.
+* This method needs write access to the file system, this essentially means the game server must be managed by you if you play multiplayer.
 
 ### Preprocessing the Images
 
-Reduce the input images' color to a limited set first. To make this step easier, you can download the needed Adobe Photoshop color table in the `extra/` directory. Press Ctrl+Alt+Shift+S, select PNG-8 as the format, select "Load color table…" from the drop-down menu of the section "Color Table", then open that color table you just downloaded. (Excuse for the inaccurate of menu literals if there is any, I'm not using the English version Photoshop.)
+Requirements for an input image:
 
-And don't forget to crop the image to 128 x 128.
+1. Its width and height must be integer multiples of 128.
+2. Its color palette must match the program's hard-coded palette. (There are ACT files for Adobe Photoshop in the `extra/` directory, or you can look into the code to make one for another image processing software.)
 
-> If you aren't a Photoshop user…  
-> Read the link above to make a color table for your favorite image processing software. Feel free to contribute if you made one!
+Steps for Adobe Photoshop:
 
-> The reason I've decided to not bundle these steps in the program? Because professional software generally has better algorithms (especially dithering algorithms) than many image processing libraries and my shitty code, and you can even fine-tune the parameters to find out the best setting for a specific image. (Some algorithms just performs worse with certain images.)
+1. Download the needed Adobe Photoshop color table in the `extra/` directory.
+2. Open images with Adobe Photoshop.
+3. Crop and resize the images to match requirement #1.
+4. File > Export > Save for Web (Legacy) (Alt+Shift+Ctrl+S).
+5. Select PNG-8 as the format, select "Load color table…" from the drop-down menu of the section "Color Table", load with the color table you just downloaded.
+6. Save.
 
 ### Generating Map Data
 
@@ -41,19 +42,27 @@ To generate for specific files:
 CM2D file1 file2 file3 ...
 ```
 
-Wildcards haven't been supported yet.
+File name must be a negative integer number, e.g. `-1000.png`. This number will be the actual map ID used in game.
 
-Output files will be under the current working directory named `map_<original_file_name_without_extension>.dat`, but you need to name them `map_<32-bit_signed_integer>.dat` to use them in-game. Negative numbers are recommended since they never conflict with normal maps.
+Input image with width or height greater than 128px will be splitted into many files, with auto-decreasing IDs:
 
-Put these `.dat` files inside `<world>/data/`.
+> map_-1000.dat
+> map_-1001.dat
+> map_-1002.dat
+> ...
+
+Put these `.dat` files into `.minecraft/saves/<WORLD_NAME>/data/` for local worlds, or `<MC_SERVER_PATH>/world/data/` for multiplayer servers.
 
 ### In-game
 
-There's no need to restart the world or server to load these new `.dat` files. Just enter the command `/give @p minecraft:filled_map{map:<ID_number>}`, that's it. The most exciting thing is you can not only use it as paintings but also a kind of custom texture to enhance your amazing buildings.
+There's no need to restart the world or server to load these new `.dat` files. However, a restart is needed to replace existing files.
+
+You can get map items with the command `/give @p minecraft:filled_map{map:<ID_number>}`.
+
 
 ## Still Confused?
 
-Most technical details can be found at the link above.
+Most technical details can be found at [the wiki](https://minecraft.gamepedia.com/Map_item_format).
 
 For any further questions, you can probably read the code if you know C#, it's even shorter than this README (besides embedded data such as the color table).
 
@@ -61,6 +70,5 @@ For any further questions, you can probably read the code if you know C#, it's e
 
 <small>(They are unlikely to be added unless someone requested them.)</small>
 
-* Subsets of the color palette
+* Custom color palette (currently v1.16 palette is hard-coded)
 * Input image resizing and dithering
-* Split an image into multiple maps
