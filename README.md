@@ -6,6 +6,23 @@ CustomMap2D is an improvised ill-designed project used to generate Minecraft map
 
 The current version is designed for 1.16. For 1.12+ compatibility, check the v1.0 release.
 
+## Color Tables Overview
+
+| Version | Type      | Colors |
+|---------|:---------:|-------:|
+| 1.16    | Full      |    232 |
+| 1.16    | Staircase |    174 |
+| 1.16    | Flat      |     58 |
+| 1.12    | Full      |    204 |
+| 1.12    | Staircase |    153 |
+| 1.12    | Flat      |     51 |
+
+* Full: every colors possible (include colors that exist but not used in game)
+* Staircase: every colors used in game (exclude 4th shade of every colorset)
+* Flat: only 2nd shade of every colorset
+
+> Staircase and Flat are the name of two techniques to create map art by arranging blocks (without external tools).
+
 ## How to Use
 
 Note:
@@ -46,9 +63,9 @@ File name must be a negative integer number, e.g. `-1000.png`. This number will 
 
 Input image with width or height greater than 128px will be splitted into many files, with auto-decreasing IDs:
 
-> map_-1000.dat
-> map_-1001.dat
-> map_-1002.dat
+> map_-1000.dat  
+> map_-1001.dat  
+> map_-1002.dat  
 > ...
 
 Put these `.dat` files into `.minecraft/saves/<WORLD_NAME>/data/` for local worlds, or `<MC_SERVER_PATH>/world/data/` for multiplayer servers.
